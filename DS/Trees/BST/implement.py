@@ -46,7 +46,34 @@ class BST:
             if (curr.right): queue.append(curr.right)
         print(bfsArr)
 
+    def inorder(self, node=None):
+        if not node:
+            if not self.root:
+                return
+            node = self.root 
+        if node.left: self.inorder(node.left)
+        print(node.getData())
+        if node.right: self.inorder(node.right)
+
+    def preOrder(self, node=None):
+        if not node:
+            if not self.root: return
+            node = self.root
+        print(node.getData())
+        if node.left: self.preOrder(node.left)
+        if node.right: self.preOrder(node.right)
+    
+    def postOrder(self, node=None):
+        if not node:
+            if not self.root: return
+            node = self.root
+        if node.left: self.postOrder(node.left)
+        if node.right: self.postOrder(node.right)
+        print(node.getData())
 
 bst = BST()
-for x in [3, 7, 4, 5, 2, 1]: bst.insert(x)
-bst.bfs()
+for x in [11, 23, 9, 13]: bst.insert(x)
+# bst.bfs()
+# bst.inorder()
+# bst.preOrder()
+bst.postOrder()
