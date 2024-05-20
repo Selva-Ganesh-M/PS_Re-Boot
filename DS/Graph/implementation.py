@@ -1,93 +1,68 @@
 import unittest
-
+graph_data = [
+    {
+    "noOfVertices": 5,
+    "edges": [[0, 1], [0, 2], [1, 3], [2, 3]]
+    },
+    {
+    "noOfVertices": 6,
+    "edges": [[0, 1], [0, 2], [3, 4], [4, 5]]
+    },
+    {
+    "noOfVertices": 4,
+    "edges": [[0, 1], [2, 3]]  # Two disconnected components
+    },
+    {
+    "noOfVertices": 7,
+    "edges": [[0, 1], [0, 2], [1, 3], [2, 4], [5, 6]]  # Two components
+    },
+    {
+    "noOfVertices": 8,
+    "edges": [[0, 1], [1, 2], [2, 3], [3, 4], [5, 6], [6, 7]]
+    },
+    {
+    "noOfVertices": 0,
+    "edges": []
+    },
+    {
+    "noOfVertices": 3,
+    "edges": [[0, 0]]  # This is an edge from a vertex to itself
+    },
+    {
+    "noOfVertices": 1,
+    "edges": []
+    },
+    {
+    "noOfVertices": 5,
+    "edges": [[0, 1], [0, 2], [0, 3], [0, 4], [1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]
+    },
+    {
+    "noOfVertices": 5,
+    "edges": [[0, 1], [2, 3]]  # Only two edges connecting distant vertices
+    }
+]
 class Graph:
-    def __init__(self, noOfVertices, edges) -> None:
+    def __init__(self, noOfVertices, edges):
         self.noOfVertices = noOfVertices
-        self.adjList = [[] for i in range(noOfVertices)]
+        self.adjList = [[]]*self.noOfVertices
         for x, y in edges:
-                self.adjList[x].append(y)
-                self.adjList[y].append(x)
-    
-    def bfs(self, node):
-        if node is None: return
-        visited = [False]*self.noOfVertices
-        def _bfs(node):
-            queue = [node]
-            visited[node] = True
-            while(queue):
-                curr = queue[0]
-                queue = queue[1:]
-                print(curr)
-                for neighbour in self.adjList[curr]:
-                    if not visited[neighbour]:
-                        visited[neighbour] = True
-                        queue.append(neighbour)
+            self.adjList[x] = y
+            self.adjList[y] = x
 
-        _bfs(node)
-        for i in range (len(visited)):
-            if not visited[i]:
-                _bfs(i)
-
-
-    def r_dfs(self, node):
-        if node is None: return
-        visited = [False]*self.noOfVertices
-        visited[node] = True
-        ans = [node]
-        def _r_dfs(node):
-            if node is None: return
-            for neighbour in self.adjList[node]:
-                if not visited[neighbour]:
-                    ans.append(neighbour)
-                    visited[neighbour] = True
-                    _r_dfs(neighbour)
-
-        _r_dfs(node)
-        for i in range(self.noOfVertices):
-            if not visited[i]:
-                _r_dfs(i) 
-        return ans
-
-
+    def getBfs(self, source):
+        if not source: return
+        visited = set()
+        ans = []
+        queue = [source]
+        while(queue):
+            curr = queue[0]
+            queue = queue[1:]
 
 class Test(unittest.TestCase):
-
     def test_bfs(self):
-        noOfVertices = 11
-        edges = [
-            [0, 1],
-            [0, 2],
-            [0, 3],
-            [0, 4],
-            [0, 5],
-            [0, 6],
-            [2, 7],
-            [4, 8],
-            [8, 9],
-            [3, 10]
-        ]
-        graph = Graph(noOfVertices, edges)
-        # graph.bfs(8)
-        graph.r_dfs(0)
+        case_data = graph_data[0]
+        graph = Graph(case_data.get("noOfVertices"), case_data.get("edges"))
+        self.assertEqual(graph.getBfs(0), [0, 1, 2, 3])
 
-        # // above 2 works just find answers and make cases below to check
-
-    def test_r_dfs(self):
-        noOfVertices = 11
-        edges = [
-            [0, 1],
-            [0, 2],
-            [0, 3],
-            [0, 4],
-            [0, 5],
-            [0, 6],
-            [2, 7],
-            [4, 8],
-            [8, 9],
-            [3, 10]
-        ]
-        graph = Graph(noOfVertices, edges)
-        self.assertEqual(graph.r_dfs(0), [0, 1, 2, 7, 3, 10, 4, 8, 9, 5, 6])
-        self.assertEqual(graph.r_dfs(4), [4, 0, 1, 2, 7, 3, 10, 5, 6, 8, 9])
 
 unittest.main()
